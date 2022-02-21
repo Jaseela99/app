@@ -11,7 +11,7 @@ const imageControl = {
         return res.status(400).json({ msg: "please provide the path" });
       }
 
-      const newimage = new imageModel({ category, path });
+      const newimage = new imageModel({ category, path,user:req.userId });
       await userModel.findByIdAndUpdate(req.userId, {
         $push: { posts: newimage.id },
         $inc: { postCount: 1 },
@@ -31,6 +31,15 @@ const imageControl = {
     } catch (error) {
       return res.status(500).json({ msg: error.message });
     }
+  },
+  getMyImage: async (req,res)=>{
+    try {
+      const image = await imageModel.find({user:req.userId})
+      return res.status(200).json({ data: image});
+    } catch (error) {
+      return res.status(500).json({ msg: error.message });
+    }
+
   },
   getImageById: async (req, res) => {
     try {

@@ -7,7 +7,7 @@ const commentSchema = new mongoose.Schema({
     },
     image:{
         type:ObjectId,
-        ref:"image"
+        ref:"Images"
     },
     text:{
         type:String
@@ -16,5 +16,5 @@ const commentSchema = new mongoose.Schema({
 {timestamps:true}
 )
 
-const comment =mongoose.model("Comment",commentSchema)
-module.exports = comment
+const Comment =mongoose.model("Comment",commentSchema)
+module.exports = Comment

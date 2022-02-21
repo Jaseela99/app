@@ -20,10 +20,10 @@ const userCtrl = {
       if (user) {
         return res.status(404).json({ msg: "user already exists" });
       }
-      if (password.length < 6) {
+       if (password.length < 6) {
         return res
           .status(400)
-          .json({ msg: "password must contain atleast 6 characters" });
+          .json({ msg: "password must contain atleast 6 characters" }); 
       }
 
       const newUser = new User({
@@ -48,15 +48,7 @@ const userCtrl = {
       if (!passwordIsValid) {
         return res.status(401).json({ msg: "Invalid password" });
       }
-      const token = jwt.sign(
-        {
-          id: user.id,
-        },
-        process.env.API_SECRET,
-        {
-          expiresIn: 86400,
-        }
-      );
+      const token = jwt.sign({ id: user._id }, process.env.API_SECRET, { expiresIn: 86400} );
       return res
         .status(200)
         .json({ data: user, msg: "login successful", accessToken: token });

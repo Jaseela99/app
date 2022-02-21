@@ -4,6 +4,8 @@ const app = express();
 
 const mongoose = require("mongoose");
 
+//process.env has the the keys and values entered in .env
+
 require("dotenv").config();
 
 app.use(express.json());
@@ -13,9 +15,7 @@ require("./routers/ImageRouter")(app);
 
 //connecting to mongodb
 mongoose
-  .connect(
-    "mongodb+srv://JASEELA:JASEELA@cluster0.d42fr.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
-  )
+  .connect(process.env.CONNECTION)
 
   //if connection is successful
   //it is a promise
@@ -27,4 +27,4 @@ app.get("/", (req, res) => res.send("hello people"));
 
 const Port = process.env.PORT || 8000;
 //server listening to port 9000
-app.listen(Port, () => console.log("server is live on port 9000"));
+app.listen(Port, () => console.log(`server is live on port ${Port}`));
