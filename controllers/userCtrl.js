@@ -5,7 +5,7 @@ const bcrypt = require("bcrypt");
 const userCtrl = {
   register: async (req, res) => {
     try {
-      const { fullName, email, password } = req.body;
+      const { fullName, email, password } = req.body; //{"fullName" :"fullName"}
 
       //  {
       // "fullName":"Jaseela A",
@@ -20,10 +20,10 @@ const userCtrl = {
       if (user) {
         return res.status(404).json({ msg: "user already exists" });
       }
-       if (password.length < 6) {
+      if (password.length < 6) {
         return res
           .status(400)
-          .json({ msg: "password must contain atleast 6 characters" }); 
+          .json({ msg: "password must contain atleast 6 characters" });
       }
 
       const newUser = new User({
@@ -48,7 +48,9 @@ const userCtrl = {
       if (!passwordIsValid) {
         return res.status(401).json({ msg: "Invalid password" });
       }
-      const token = jwt.sign({ id: user._id }, process.env.API_SECRET, { expiresIn: 86400} );
+      const token = jwt.sign({ id: user._id }, process.env.API_SECRET, {
+        expiresIn: 86400,
+      });
       return res
         .status(200)
         .json({ data: user, msg: "login successful", accessToken: token });
@@ -56,38 +58,6 @@ const userCtrl = {
       return res.status(500).json({ msg: error.message });
     }
   },
-  /* //to get data of all registered users
-  getAllUsers: async (req, res) => {
-    try {
-      const users = await User.find();
-      res.json({ data: users });
-    } catch (error) {
-      res.json({ msg: error.message });
-    }
-  },
-  // get uder by id
-  getUserById: async (req, res) => {
-    try {
-      const user = await User.findById(req.params.id);
-      if (!user) {
-        res.json({ msg: "user not found" });
-      }
-      res.json({ data: user.fullName });
-    } catch (error) {
-      res.json({ msg: error.message });
-    }
-  }, */
-
-  /* ///delete user by id
-  deleteUserById: async (req, res) => {
-    try {
-      const user = await User.findByIdAndDelete(req.params.id);
-
-      res.json({ msg: "user removed" });
-    } catch (error) {
-      res.json({ msg: error.message });
-    }
-  }, */
 };
 
 module.exports = userCtrl;
