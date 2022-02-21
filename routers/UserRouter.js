@@ -1,11 +1,8 @@
-const userCtrl = require("../controllers/userCtrl")
+const userCtrl = require("../controllers/UserCtrl");
 
-const router =(app)=>{
-    app.post("/user",userCtrl.register)
-    app.get("/user",userCtrl.getAllUsers)
-    app.get("/user/:id",userCtrl.getUserById)
-    app.delete("/user/:id",userCtrl.deleteUserById)
-}
+const router = (app) => {
+  app.post("/register", userCtrl.register);
+  app.post("/login", userCtrl.login);
+};
 
-
-module.exports =router
+module.exports = router;
