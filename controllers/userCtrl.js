@@ -1,4 +1,6 @@
-const User = require("../models/Usermodel");
+const User = require("../models/UserModel");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 
 const userCtrl = {
   register: async (req, res) => {
@@ -16,20 +18,53 @@ const userCtrl = {
       const user = await User.findOne({ email });
 
       if (user) {
-        res.json({ msg: "user already exists" });
+        return res.status(404).json({ msg: "user already exists" });
       }
       if (password.length < 6) {
-        res.json({ msg: "password must contain atleast 6 characters" });
+        return res
+          .status(400)
+          .json({ msg: "password must contain atleast 6 characters" });
       }
 
-      const newUser = new User({ fullName, email, password });
+      const newUser = new User({
+        fullName,
+        email,
+        password: bcrypt.hashSync(password, 10),
+      });
       await newUser.save();
-      res.json({ msg: "registration successful" });
+      return res.status(200).json({ msg: "registration successful" });
     } catch (error) {
-      res.json({ msg: error.message });
+      res.status(500).json({ msg: error.message });
     }
   },
-//to get data of all registered users
+  login: async (req, res) => {
+    try {
+      const { email, password } = req.body;
+      const user = await User.findOne({ email });
+      if (!user) {
+        return res.status(404).json({ msg: "user not found" });
+      }
+      const passwordIsValid = bcrypt.compareSync(password, user.password);
+      if (!passwordIsValid) {
+        return res.status(401).json({ msg: "Invalid password" });
+      }
+      const token = jwt.sign(
+        {
+          id: user.id,
+        },
+        process.env.API_SECRET,
+        {
+          expiresIn: 86400,
+        }
+      );
+      return res
+        .status(200)
+        .json({ data: user, msg: "login successful", accessToken: token });
+    } catch (error) {
+      return res.status(500).json({ msg: error.message });
+    }
+  },
+  /* //to get data of all registered users
   getAllUsers: async (req, res) => {
     try {
       const users = await User.find();
@@ -38,20 +73,20 @@ const userCtrl = {
       res.json({ msg: error.message });
     }
   },
- // get uder by id
+  // get uder by id
   getUserById: async (req, res) => {
     try {
       const user = await User.findById(req.params.id);
       if (!user) {
         res.json({ msg: "user not found" });
       }
-      res.json({data:user.fullName});
+      res.json({ data: user.fullName });
     } catch (error) {
       res.json({ msg: error.message });
     }
-  },
+  }, */
 
-  ///delete user by id
+  /* ///delete user by id
   deleteUserById: async (req, res) => {
     try {
       const user = await User.findByIdAndDelete(req.params.id);
@@ -60,7 +95,7 @@ const userCtrl = {
     } catch (error) {
       res.json({ msg: error.message });
     }
-  },
+  }, */
 };
 
 module.exports = userCtrl;
