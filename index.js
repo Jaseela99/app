@@ -4,15 +4,11 @@ const app = express();
 
 const mongoose = require("mongoose");
 
-//process.env has the the keys and values entered in .env
-
-require("dotenv").config();
-
-app.use(express.json());
+app.use(express.json()); //to set up middleware  and express.json recognize req as json object
 
 require("./routers/UserRouter")(app); //since it is a function
 require("./routers/ImageRouter")(app);
-
+//Mongoose is a Node. js-based Object Data Modeling (ODM) library for MongoDB.
 //connecting to mongodb
 mongoose.connect("mongodb+srv://JASEELA:JASEELA@cluster0.d42fr.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
 
