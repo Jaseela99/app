@@ -29,7 +29,8 @@ const userCtrl = {
       const newUser = new User({
         fullName,
         email,
-        password: bcrypt.hashSync(password, 10),
+        password: bcrypt.hashSync(password, 10),//bcrypt to hash our password before storing it in the database.
+        //used to Synchronously generates a hash for the given string
       });
       await newUser.save();
       return res.status(200).json({ msg: "registration successful" });
@@ -48,6 +49,8 @@ const userCtrl = {
       if (!passwordIsValid) {
         return res.status(401).json({ msg: "Invalid password" });
       }
+     //to add token signature
+
       const token = jwt.sign({ id: user._id },"this_is_secret", {
         expiresIn: 86400,
       });

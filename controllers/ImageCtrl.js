@@ -3,6 +3,9 @@ const userModel = require("../models/UserModel");
 const commentModel = require("../models/commentmodel");
 
 const imageControl = {
+
+  //uploading an image
+
   uploadImage: async (req, res) => {
     try {
       const { category, path } = req.body;
@@ -13,8 +16,8 @@ const imageControl = {
 
       const newimage = new imageModel({ category, path,user:req.userId });
       await userModel.findByIdAndUpdate(req.userId, {
-        $push: { posts: newimage.id },
-        $inc: { postCount: 1 },
+        $push: { posts: newimage.id }, //to push userid to likes
+        $inc: { postCount: 1 }, //to increase the post count by 1
       });
       await newimage.save();
 
@@ -23,6 +26,9 @@ const imageControl = {
       res.status(500).json({ msg: error.message });
     }
   },
+
+  //to get all images
+
   getAllImages: async (req, res) => {
     try {
       const image = await imageModel.find();
@@ -32,6 +38,9 @@ const imageControl = {
       return res.status(500).json({ msg: error.message });
     }
   },
+
+  //to get user image
+
   getMyImage: async (req,res)=>{
     try {
       const image = await imageModel.find({user:req.userId})
@@ -39,8 +48,10 @@ const imageControl = {
     } catch (error) {
       return res.status(500).json({ msg: error.message });
     }
-
   },
+
+  //get image by id
+
   getImageById: async (req, res) => {
     try {
       const image = await imageModel.findById(req.params.id);
@@ -53,6 +64,9 @@ const imageControl = {
       return res.status(500).json({ msg: error.message });
     }
   },
+
+  //delete image
+
   deleteImageById: async (req, res) => {
     try {
       const image = await imageModel.findById(req.params.id);
@@ -67,6 +81,9 @@ const imageControl = {
       return res.status(500).json({ msg: error.message });
     }
   },
+
+  //add like and dislike
+
   toggleLike: async (req, res) => {
     try {
       const image = await imageModel.findById(req.params.id);
@@ -74,10 +91,10 @@ const imageControl = {
       if (!image) {
         return res.status(404).json({ msg: "no image with this id found" });
       }
-      if (image.likes.includes(req.userId)) {
-        const index = image.likes.indexOf(req.userId);
-        image.likes.splice(index, 1);
-        image.likeCount = image.likeCount - 1;
+      if (image.likes.includes(req.userId)) { //if likes includes the userid
+        const index = image.likes.indexOf(req.userId); //index is found
+        image.likes.splice(index, 1);//remove the id
+        image.likeCount = image.likeCount - 1; //count decreases by 1
         await image.save();
         return res.status(200).json({ msg: "image disliked" });
       } else {
@@ -90,6 +107,9 @@ const imageControl = {
       return res.status(500).json({ msg: error.message });
     }
   },
+
+  //search by category name
+
   searchByCategory: async (req, res) => {
     try {
       const image = await imageModel.find({ category: req.query.category });
@@ -98,6 +118,9 @@ const imageControl = {
       return res.status(500).json({ msg: error.message });
     }
   },
+
+  //adding a comment
+
   addComment: async (req, res) => {
     try {
       const image = await imageModel.findById(req.params.id);
@@ -118,6 +141,9 @@ const imageControl = {
       return res.status(500).json({ msg: error.message });
     }
   },
+
+  //deleting a comment
+
   deleteComment: async (req, res) => {
     try {
       const image = await imageModel.findById(req.params.id);
@@ -138,6 +164,9 @@ const imageControl = {
       return res.status(500).json({ msg: error.message });
     }
   },
+
+  //editing a comment
+  
   editComment: async (req, res) => {
     try {
       
@@ -146,8 +175,9 @@ const imageControl = {
      if (text){
       fieldsToUpdate.text =text
      }
+     //{...fieldsToUpdate } is a spread operator,it allows us to quickly copy all or part of an existing object into another object.
      const comment =await commentModel.findByIdAndUpdate(req.params.commentId,{
-         $set:{...fieldsToUpdate}
+         $set:{...fieldsToUpdate} //set is used to replace
      },{
          new : true
      })
