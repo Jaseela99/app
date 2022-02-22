@@ -5,13 +5,13 @@ const userSchema = new mongoose.Schema(
   {
     fullName: {
       type: String,
-      required: true,
+      required: true, //boolean or function, if true adds a required validator for this property
     },
     email: {
       type: String,
-      lowercase: true,
+      lowercase: true, //converts to lowercase
       required: true,
-      unique: true,
+      unique: true,  // boolean, whether to define a unique index on this property.
     },
     password: {
       type: String,

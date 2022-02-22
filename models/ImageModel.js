@@ -1,4 +1,7 @@
 const mongoose = require("mongoose");
+
+// used for unique identifiers
+
 const { ObjectId } = mongoose.Schema.Types;
 
 const imageSchema = new mongoose.Schema(
@@ -36,5 +39,6 @@ const imageSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+//model = collection +schema
 const imageModel = mongoose.model("Images", imageSchema);
 module.exports = imageModel;
