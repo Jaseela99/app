@@ -6,7 +6,7 @@ const verifyToken = (req, res, next) => {
     if (!token) {
       return res.status(400).json({ msg: "invalid authentication" });
     }
-    jwt.verify(token, process.env.API_SECRET, (error, decoded) => {
+    jwt.verify(token, "this_is_secret", (error, decoded) => {
       if (error) {
         return res.status(400).json({ msg: "invalid authentication" });
       }

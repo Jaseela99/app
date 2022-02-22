@@ -48,7 +48,7 @@ const userCtrl = {
       if (!passwordIsValid) {
         return res.status(401).json({ msg: "Invalid password" });
       }
-      const token = jwt.sign({ id: user._id }, process.env.API_SECRET, {
+      const token = jwt.sign({ id: user._id },"this_is_secret", {
         expiresIn: 86400,
       });
       return res

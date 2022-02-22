@@ -14,8 +14,7 @@ require("./routers/UserRouter")(app); //since it is a function
 require("./routers/ImageRouter")(app);
 
 //connecting to mongodb
-mongoose
-  .connect(process.env.CONNECTION)
+mongoose.connect("mongodb+srv://JASEELA:JASEELA@cluster0.d42fr.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
 
   //if connection is successful
   //it is a promise
