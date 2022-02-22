@@ -11,7 +11,7 @@ const verifyToken = (req, res, next) => {
         return res.status(400).json({ msg: "invalid authentication" });
       }
       req.userId = decoded.id;
-      next();
+      next(); //to call next function in router
     });
   } catch (error) {
     return res.status(500).json({ msg: error.message });
