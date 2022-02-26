@@ -1,11 +1,12 @@
 const express = require("express");
+const cors = require("cors")
 
 const app = express();
 
 const mongoose = require("mongoose");
 
 app.use(express.json()); //to set up middleware  and express.json recognize req as json object
-
+app.use(cors())
 require("./routers/UserRouter")(app); //since it is a function
 require("./routers/ImageRouter")(app);
 //Mongoose is a Node. js-based Object Data Modeling (ODM) library for MongoDB.
